@@ -9,7 +9,7 @@ import java.util.Collection;
 public interface ItemDao {
     Item getById(int itemId);
 
-    Collection<Item> getAll(int userId);
+    Collection<Item> findByUserId(int userId);
 
     Item create(Item item);
 

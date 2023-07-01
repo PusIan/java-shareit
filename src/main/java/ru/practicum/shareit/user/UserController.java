@@ -17,26 +17,27 @@ import java.util.Collection;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @GetMapping("/{userId}")
     public UserDto getById(@PathVariable int userId) {
-        return UserMapper.toUserDto(userService.getById(userId));
+        return userMapper.toUserDto(userService.getById(userId));
     }
 
     @GetMapping
     public Collection<UserDto> getAll() {
-        return UserMapper.toUserDtos(userService.getAll());
+        return userMapper.toUserDtos(userService.getAll());
     }
 
     @PostMapping
     public UserDto create(@Validated(Create.class) @RequestBody UserDto userDto) {
-        return UserMapper.toUserDto(userService.create(UserMapper.toUser(userDto)));
+        return userMapper.toUserDto(userService.create(userMapper.toUser(userDto)));
     }
 
     @PatchMapping("/{userId}")
     public UserDto update(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable int userId) {
         userDto.setId(userId);
-        return UserMapper.toUserDto(userService.update(UserMapper.toUser(userDto)));
+        return userMapper.toUserDto(userService.update(userMapper.toUser(userDto)));
     }
 
     @DeleteMapping("/{userId}")

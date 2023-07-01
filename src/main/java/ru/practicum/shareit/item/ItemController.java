@@ -17,30 +17,31 @@ import java.util.Collection;
 public class ItemController {
 
     private final ItemService itemService;
+    private final ItemMapper itemMapper;
 
     @GetMapping("/{itemId}")
     public ItemDto getById(@PathVariable int itemId) {
-        return ItemMapper.toItemDto(itemService.getById(itemId));
+        return itemMapper.toItemDto(itemService.getById(itemId));
     }
 
 
     @GetMapping
-    public Collection<ItemDto> getAll(@RequestHeader(Constants.HEADER_USER_ID) int userId) {
-        return ItemMapper.toItemDtos(itemService.getAll(userId));
+    public Collection<ItemDto> findByIserId(@RequestHeader(Constants.HEADER_USER_ID) int userId) {
+        return itemMapper.toItemDtos(itemService.findByUserId(userId));
     }
 
     @PostMapping
     public ItemDto create(@Validated(Create.class) @RequestBody ItemDto itemDto,
                           @RequestHeader(Constants.HEADER_USER_ID) int userId) {
         itemDto.setOwnerId(userId);
-        return ItemMapper.toItemDto(itemService.create(ItemMapper.toItem(itemDto)));
+        return itemMapper.toItemDto(itemService.create(itemMapper.toItem(itemDto)));
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestBody ItemDto itemDto, @PathVariable int itemId,
                           @RequestHeader(Constants.HEADER_USER_ID) int userId) {
         itemDto.setId(itemId);
-        return ItemMapper.toItemDto(itemService.update(ItemMapper.toItem(itemDto), userId));
+        return itemMapper.toItemDto(itemService.update(itemMapper.toItem(itemDto), userId));
     }
 
     @DeleteMapping("/{itemId}")
@@ -51,6 +52,6 @@ public class ItemController {
     @GetMapping("/search")
     public Collection<ItemDto> search(@RequestParam String text,
                                       @RequestHeader(Constants.HEADER_USER_ID) int userId) {
-        return ItemMapper.toItemDtos(itemService.search(text, userId));
+        return itemMapper.toItemDtos(itemService.search(text, userId));
     }
 }

@@ -1,18 +1,20 @@
 package ru.practicum.shareit.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.user.User;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class ItemRequest {
     private Integer id;
     private String description;
     private User requester;
-    private Date created;
+    private LocalDate created;
 
     public ItemRequest(Integer id) {
         this.id = id;

@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 @Repository
 public class ItemDaoImpl implements ItemDao {
 
-    Map<Integer, Item> items;
-    int id = 0;
+    private final Map<Integer, Item> items;
+    private int id = 0;
 
     public ItemDaoImpl() {
         this.items = new HashMap<>();
@@ -25,7 +25,7 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public Collection<Item> getAll(int userId) {
+    public Collection<Item> findByUserId(int userId) {
         return this.items.values().stream()
                 .filter(item -> item.getOwner().getId().equals(userId))
                 .collect(Collectors.toList());

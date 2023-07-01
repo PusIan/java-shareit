@@ -22,8 +22,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<Item> getAll(int userId) {
-        return itemDao.getAll(userId);
+    public Collection<Item> findByUserId(int userId) {
+        return itemDao.findByUserId(userId);
     }
 
     @Override

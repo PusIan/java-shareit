@@ -8,8 +8,8 @@ import java.util.Map;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-    Map<Integer, User> users;
-    int id = 0;
+    private final Map<Integer, User> users;
+    private int id = 0;
 
     public UserDaoImpl() {
         this.users = new HashMap<>();
