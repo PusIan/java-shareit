@@ -1,18 +1,36 @@
 package ru.practicum.shareit.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "users")
 @Getter
 @Setter
-@AllArgsConstructor
+@ToString
+@NoArgsConstructor
 public class User {
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
+    @Column(unique = true)
     private String email;
 
-    public User(Integer id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        return id != null && id.equals(((User) o).getId());
     }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }

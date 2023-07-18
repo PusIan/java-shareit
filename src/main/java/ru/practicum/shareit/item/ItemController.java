@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.utils.Constants;
 import ru.practicum.shareit.utils.Create;
 
@@ -20,38 +19,44 @@ public class ItemController {
     private final ItemMapper itemMapper;
 
     @GetMapping("/{itemId}")
-    public ItemDto getById(@PathVariable int itemId) {
-        return itemMapper.toItemDto(itemService.getById(itemId));
+    public ItemDtoWithBookingDto getById(@PathVariable long itemId, @RequestHeader(Constants.HEADER_USER_ID) long userId) {
+        return itemService.getById(itemId, userId);
     }
 
 
     @GetMapping
-    public Collection<ItemDto> findByIserId(@RequestHeader(Constants.HEADER_USER_ID) int userId) {
-        return itemMapper.toItemDtos(itemService.findByUserId(userId));
+    public Collection<ItemDtoWithBookingDto> findByUserId(@RequestHeader(Constants.HEADER_USER_ID) long userId) {
+        return itemService.findByUserId(userId);
     }
 
     @PostMapping
     public ItemDto create(@Validated(Create.class) @RequestBody ItemDto itemDto,
-                          @RequestHeader(Constants.HEADER_USER_ID) int userId) {
-        itemDto.setOwnerId(userId);
-        return itemMapper.toItemDto(itemService.create(itemMapper.toItem(itemDto)));
+                          @RequestHeader(Constants.HEADER_USER_ID) long userId) {
+        return itemService.create(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto update(@RequestBody ItemDto itemDto, @PathVariable int itemId,
-                          @RequestHeader(Constants.HEADER_USER_ID) int userId) {
+    public ItemDto update(@RequestBody ItemDto itemDto, @PathVariable long itemId,
+                          @RequestHeader(Constants.HEADER_USER_ID) long userId) {
         itemDto.setId(itemId);
-        return itemMapper.toItemDto(itemService.update(itemMapper.toItem(itemDto), userId));
+        return itemService.update(itemDto, userId);
     }
 
     @DeleteMapping("/{itemId}")
-    public void delete(@PathVariable int itemId) {
+    public void delete(@PathVariable long itemId) {
         itemService.delete(itemId);
     }
 
     @GetMapping("/search")
     public Collection<ItemDto> search(@RequestParam String text,
-                                      @RequestHeader(Constants.HEADER_USER_ID) int userId) {
-        return itemMapper.toItemDtos(itemService.search(text, userId));
+                                      @RequestHeader(Constants.HEADER_USER_ID) long userId) {
+        return itemService.search(text, userId);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentResponseDto addComment(@Validated @RequestBody CommentDto commentDto,
+                                         @PathVariable long itemId,
+                                         @RequestHeader(Constants.HEADER_USER_ID) long userId) {
+        return itemService.addComment(commentDto, itemId, userId);
     }
 }

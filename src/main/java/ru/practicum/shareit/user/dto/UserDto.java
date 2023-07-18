@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 @AllArgsConstructor
 public class UserDto {
-    private Integer id;
+    private Long id;
     private String name;
     @NotEmpty(message = "email can not be empty", groups = {Create.class})
     @Email(message = "email must match pattern", groups = {Create.class, Update.class})
