@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,12 +43,10 @@ public class ItemServiceImpl implements ItemService {
         BookingInItemDtoResponse nextBooking = null;
         if (item.getOwner().getId() == userId) {
             lastBooking = bookingRepository.findLastBooking(itemId)
-                    .stream().map(bookingMapper::toBookingInItemDtoResponse)
-                    .findAny()
+                    .map(bookingMapper::toBookingInItemDtoResponse)
                     .orElse(null);
             nextBooking = bookingRepository.findNextBooking(itemId)
-                    .stream().map(bookingMapper::toBookingInItemDtoResponse)
-                    .findAny()
+                    .map(bookingMapper::toBookingInItemDtoResponse)
                     .orElse(null);
         }
         Collection<CommentResponseDto> commentResponseDto = commentMapper
@@ -60,12 +59,10 @@ public class ItemServiceImpl implements ItemService {
         Collection<ItemDtoWithBookingDto> itemDtoWithBookingDtos = new ArrayList<>();
         for (Item item : itemRepository.findItemsByOwnerId(userId)) {
             BookingInItemDtoResponse lastBooking = bookingRepository.findLastBooking(item.getId())
-                    .stream().map(bookingMapper::toBookingInItemDtoResponse)
-                    .findAny()
+                    .map(bookingMapper::toBookingInItemDtoResponse)
                     .orElse(null);
             BookingInItemDtoResponse nextBooking = bookingRepository.findNextBooking(item.getId())
-                    .stream().map(bookingMapper::toBookingInItemDtoResponse)
-                    .findAny()
+                    .map(bookingMapper::toBookingInItemDtoResponse)
                     .orElse(null);
             Collection<CommentResponseDto> commentsResponseDto = commentMapper
                     .toCommentsResponseDto(commentRepository.findCommentsByItem(item));
@@ -89,15 +86,9 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException(String.format("item %s not found", itemDto.getId())));
         long itemOwnerId = item.getOwner().getId();
         if (itemOwnerId == userId) {
-            if (itemDto.getName() != null) {
-                item.setName(itemDto.getName());
-            }
-            if (itemDto.getDescription() != null) {
-                item.setDescription(itemDto.getDescription());
-            }
-            if (itemDto.getAvailable() != null) {
-                item.setAvailable(itemDto.getAvailable());
-            }
+            Optional.ofNullable(itemDto.getName()).ifPresent(item::setName);
+            Optional.ofNullable(itemDto.getDescription()).ifPresent(item::setDescription);
+            Optional.ofNullable(itemDto.getAvailable()).ifPresent(item::setAvailable);
             return itemMapper.toItemDto(itemRepository.save(item));
         } else {
             throw new PermissionViolationException("Only owner can change item");

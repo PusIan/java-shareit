@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.BookingStateFetchByBooker.BookingStateFetchBookerStrategyFactory;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -27,6 +28,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final BookingStateFetchBookerStrategyFactory bookingStateFetchBookerStrategyFactory;
 
     @Override
     public BookingDtoResponse create(BookingDtoRequest bookingDtoRequest, long userId) {
@@ -73,39 +75,16 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDtoResponse> getAllByUserId(BookingStatusFilter state, long userId) {
+    public Collection<BookingDtoResponse> getAllByBookerId(BookingStatusFilter state, long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
-        Collection<Booking> bookings;
-        switch (state) {
-            case CURRENT:
-                bookings = bookingRepository.findBookingsByBookerAndStartBeforeAndEndAfterOrderByStartDesc(
-                        user, LocalDateTime.now(), LocalDateTime.now());
-                break;
-            case REJECTED:
-                bookings = bookingRepository.findBookingsByBookerAndStatusOrderByStartDesc(user, BookingStatus.REJECTED);
-                break;
-            case WAITING:
-                bookings = bookingRepository.findBookingsByBookerAndStatusOrderByStartDesc(user, BookingStatus.WAITING);
-                break;
-            case PAST:
-                bookings = bookingRepository.findBookingsByBookerAndStatusInAndEndBeforeOrderByStartDesc(
-                        user, List.of(BookingStatus.APPROVED, BookingStatus.WAITING), LocalDateTime.now());
-                break;
-            case FUTURE:
-                bookings = bookingRepository.findBookingsByBookerAndStatusInAndStartAfterOrderByStartDesc(
-                        user, List.of(BookingStatus.APPROVED, BookingStatus.WAITING), LocalDateTime.now());
-                break;
-            default:
-                bookings = bookingRepository.findBookingsByBookerOrderByStartDesc(user);
-                break;
-        }
+        Collection<Booking> bookings = bookingStateFetchBookerStrategyFactory.findStrategy(state).fetch(user);
         return bookings.stream().map(bookingMapper::toBookingDtoResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<BookingDtoResponse> getAllByOwnerId(BookingStatusFilter state, long userId) {
+    public Collection<BookingDtoResponse> getAllByItemOwnerId(BookingStatusFilter state, long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
         Collection<Booking> bookings;

@@ -36,14 +36,14 @@ public class BookingController {
     }
 
     @GetMapping
-    public Collection<BookingDtoResponse> getAllByUserId(@RequestParam(defaultValue = "ALL") BookingStatusFilter state,
-                                                         @RequestHeader(Constants.HEADER_USER_ID) long userId) {
-        return bookingService.getAllByUserId(state, userId);
+    public Collection<BookingDtoResponse> getAllByBookerId(@RequestParam(defaultValue = "ALL") BookingStatusFilter state,
+                                                           @RequestHeader(Constants.HEADER_USER_ID) long userId) {
+        return bookingService.getAllByBookerId(state, userId);
     }
 
     @GetMapping("/owner")
-    public Collection<BookingDtoResponse> getAllByOwnerId(@RequestParam(defaultValue = "ALL") BookingStatusFilter state,
-                                                          @RequestHeader(Constants.HEADER_USER_ID) long userId) {
-        return bookingService.getAllByOwnerId(state, userId);
+    public Collection<BookingDtoResponse> getAllByItemOwnerId(@RequestParam(defaultValue = "ALL") BookingStatusFilter state,
+                                                              @RequestHeader(Constants.HEADER_USER_ID) long userId) {
+        return bookingService.getAllByItemOwnerId(state, userId);
     }
 }

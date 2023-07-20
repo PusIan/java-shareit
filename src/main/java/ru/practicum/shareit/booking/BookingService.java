@@ -12,7 +12,7 @@ public interface BookingService {
 
     BookingDtoResponse getById(long bookingId, long userId);
 
-    Collection<BookingDtoResponse> getAllByUserId(BookingStatusFilter state, long userId);
+    Collection<BookingDtoResponse> getAllByBookerId(BookingStatusFilter state, long userId);
 
-    Collection<BookingDtoResponse> getAllByOwnerId(BookingStatusFilter state, long userId);
+    Collection<BookingDtoResponse> getAllByItemOwnerId(BookingStatusFilter state, long userId);
 }
