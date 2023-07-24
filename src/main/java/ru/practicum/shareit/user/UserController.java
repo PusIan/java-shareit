@@ -20,28 +20,28 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping("/{userId}")
-    public UserDto getById(@PathVariable int userId) {
-        return userMapper.toUserDto(userService.getById(userId));
+    public UserDto getById(@PathVariable long userId) {
+        return userService.getById(userId);
     }
 
     @GetMapping
     public Collection<UserDto> getAll() {
-        return userMapper.toUserDtos(userService.getAll());
+        return userService.getAll();
     }
 
     @PostMapping
     public UserDto create(@Validated(Create.class) @RequestBody UserDto userDto) {
-        return userMapper.toUserDto(userService.create(userMapper.toUser(userDto)));
+        return userService.create(userDto);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto update(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable int userId) {
+    public UserDto update(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable long userId) {
         userDto.setId(userId);
-        return userMapper.toUserDto(userService.update(userMapper.toUser(userDto)));
+        return userService.update(userDto);
     }
 
     @DeleteMapping("/{userId}")
-    public void delete(@PathVariable int userId) {
+    public void delete(@PathVariable long userId) {
         userService.delete(userId);
     }
 }
