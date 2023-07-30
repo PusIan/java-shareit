@@ -21,4 +21,5 @@ public class ItemDto {
     private String description;
     @NotNull(message = "available can not be empty", groups = {Create.class})
     private Boolean available;
+    private Long requestId;
 }

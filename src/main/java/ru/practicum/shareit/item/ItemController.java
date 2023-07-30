@@ -8,11 +8,13 @@ import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.utils.Constants;
 import ru.practicum.shareit.utils.Create;
 
+import javax.validation.constraints.Min;
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Validated
 public class ItemController {
 
     private final ItemService itemService;
@@ -25,8 +27,10 @@ public class ItemController {
 
 
     @GetMapping
-    public Collection<ItemDtoWithBookingDto> findByUserId(@RequestHeader(Constants.HEADER_USER_ID) long userId) {
-        return itemService.findByUserId(userId);
+    public Collection<ItemDtoWithBookingDto> findByUserId(@RequestHeader(Constants.HEADER_USER_ID) long userId,
+                                                          @RequestParam(required = false) @Min(0) Integer from,
+                                                          @RequestParam(required = false) @Min(1) Integer size) {
+        return itemService.findByUserId(userId, from, size);
     }
 
     @PostMapping
@@ -49,8 +53,10 @@ public class ItemController {
 
     @GetMapping("/search")
     public Collection<ItemDto> search(@RequestParam String text,
-                                      @RequestHeader(Constants.HEADER_USER_ID) long userId) {
-        return itemService.search(text, userId);
+                                      @RequestHeader(Constants.HEADER_USER_ID) long userId,
+                                      @RequestParam(required = false) @Min(0) Integer from,
+                                      @RequestParam(required = false) @Min(1) Integer size) {
+        return itemService.search(text, userId, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

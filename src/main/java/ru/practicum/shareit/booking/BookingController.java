@@ -8,11 +8,13 @@ import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.utils.Constants;
 
+import javax.validation.constraints.Min;
 import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Validated
 public class BookingController {
     private final BookingService bookingService;
 
@@ -37,13 +39,17 @@ public class BookingController {
 
     @GetMapping
     public Collection<BookingDtoResponse> getAllByBookerId(@RequestParam(defaultValue = "ALL") BookingStatusFilter state,
-                                                           @RequestHeader(Constants.HEADER_USER_ID) long userId) {
-        return bookingService.getAllByBookerId(state, userId);
+                                                           @RequestHeader(Constants.HEADER_USER_ID) long userId,
+                                                           @RequestParam(required = false) @Min(0) Integer from,
+                                                           @RequestParam(required = false) @Min(1) Integer size) {
+        return bookingService.getAllByBookerId(state, userId, from, size);
     }
 
     @GetMapping("/owner")
     public Collection<BookingDtoResponse> getAllByItemOwnerId(@RequestParam(defaultValue = "ALL") BookingStatusFilter state,
-                                                              @RequestHeader(Constants.HEADER_USER_ID) long userId) {
-        return bookingService.getAllByItemOwnerId(state, userId);
+                                                              @RequestHeader(Constants.HEADER_USER_ID) long userId,
+                                                              @RequestParam(required = false) @Min(0) Integer from,
+                                                              @RequestParam(required = false) @Min(1) Integer size) {
+        return bookingService.getAllByItemOwnerId(state, userId, from, size);
     }
 }

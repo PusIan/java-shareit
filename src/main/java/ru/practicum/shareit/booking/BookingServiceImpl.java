@@ -2,6 +2,9 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingStateFetchByBooker.BookingStateFetchBookerStrategyFactory;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
@@ -75,40 +78,48 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDtoResponse> getAllByBookerId(BookingStatusFilter state, long userId) {
+    public Collection<BookingDtoResponse> getAllByBookerId(BookingStatusFilter state, long userId, Integer from, Integer size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
-        Collection<Booking> bookings = bookingStateFetchBookerStrategyFactory.findStrategy(state).fetch(user);
+        Sort sort = Sort.by("start").descending();
+        Pageable pageable = from != null && size != null ?
+                PageRequest.of(from / size, size, sort) :
+                PageRequest.of(0, Integer.MAX_VALUE, sort);
+        Collection<Booking> bookings = bookingStateFetchBookerStrategyFactory.findStrategy(state).fetch(user, pageable);
         return bookings.stream().map(bookingMapper::toBookingDtoResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<BookingDtoResponse> getAllByItemOwnerId(BookingStatusFilter state, long userId) {
+    public Collection<BookingDtoResponse> getAllByItemOwnerId(BookingStatusFilter state, long userId, Integer from, Integer size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
         Collection<Booking> bookings;
+        Sort sort = Sort.by("start").descending();
+        Pageable pageable = from != null && size != null ?
+                PageRequest.of(from / size, size, sort) :
+                PageRequest.of(0, Integer.MAX_VALUE, sort);
         switch (state) {
             case CURRENT:
-                bookings = bookingRepository.findBookingsByItem_OwnerAndStartBeforeAndEndAfterOrderByStartDesc(
-                        user, LocalDateTime.now(), LocalDateTime.now());
+                bookings = bookingRepository.findBookingsByItem_OwnerAndStartBeforeAndEndAfter(
+                        user, LocalDateTime.now(), LocalDateTime.now(), pageable);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findBookingsByItem_OwnerAndStatusOrderByStartDesc(user, BookingStatus.REJECTED);
+                bookings = bookingRepository.findBookingsByItem_OwnerAndStatus(user, BookingStatus.REJECTED, pageable);
                 break;
             case WAITING:
-                bookings = bookingRepository.findBookingsByItem_OwnerAndStatusOrderByStartDesc(user, BookingStatus.WAITING);
+                bookings = bookingRepository.findBookingsByItem_OwnerAndStatus(user, BookingStatus.WAITING, pageable);
                 break;
             case PAST:
-                bookings = bookingRepository.findBookingsByItem_OwnerAndStatusInAndEndBeforeOrderByStartDesc(
-                        user, List.of(BookingStatus.APPROVED, BookingStatus.WAITING), LocalDateTime.now());
+                bookings = bookingRepository.findBookingsByItem_OwnerAndStatusInAndEndBefore(
+                        user, List.of(BookingStatus.APPROVED, BookingStatus.WAITING), LocalDateTime.now(), pageable);
                 break;
             case FUTURE:
-                bookings = bookingRepository.findBookingsByItem_OwnerAndStatusInAndStartAfterOrderByStartDesc(
-                        user, List.of(BookingStatus.APPROVED, BookingStatus.WAITING), LocalDateTime.now());
+                bookings = bookingRepository.findBookingsByItem_OwnerAndStatusInAndStartAfter(
+                        user, List.of(BookingStatus.APPROVED, BookingStatus.WAITING), LocalDateTime.now(), pageable);
                 break;
             default:
-                bookings = bookingRepository.findBookingsByItem_OwnerOrderByStartDesc(user);
+                bookings = bookingRepository.findBookingsByItem_Owner(user, pageable);
                 break;
         }
         return bookings.stream().map(bookingMapper::toBookingDtoResponse)
