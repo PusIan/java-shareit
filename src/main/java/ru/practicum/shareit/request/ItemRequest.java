@@ -1,9 +1,6 @@
 package ru.practicum.shareit.request;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 
@@ -17,6 +14,7 @@ import java.util.Collection;
 @Setter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,16 +29,4 @@ public class ItemRequest {
     @ToString.Exclude
     @JoinColumn(name = "request_id")
     private Collection<Item> items;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ItemRequest)) return false;
-        return id != null && id.equals(((ItemRequest) o).getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

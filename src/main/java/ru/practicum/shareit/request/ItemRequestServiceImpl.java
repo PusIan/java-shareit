@@ -46,11 +46,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public Collection<ItemRequestResponseDto> findAll() {
-        return itemRequestMapper.toItemRequestDtos(itemRequestRepository.findAll());
-    }
-
-    @Override
     public ItemRequestResponseDto findById(long requestId, long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));

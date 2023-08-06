@@ -2,7 +2,6 @@ package ru.practicum.shareit.request.dto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.request.ItemRequest;
@@ -32,11 +31,6 @@ public class ItemRequestMapperImpl implements ItemRequestMapper {
     @Override
     public Collection<ItemRequestResponseDto> toItemRequestDtos(Collection<ItemRequest> itemRequests) {
         return itemRequests.stream().map(this::toItemRequestDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public Page<ItemRequestResponseDto> toItemRequestDtos(Page<ItemRequest> itemRequests) {
-        return itemRequests.map(this::toItemRequestDto);
     }
 
     @Override

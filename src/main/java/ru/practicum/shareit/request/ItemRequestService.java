@@ -14,7 +14,5 @@ public interface ItemRequestService {
 
     Collection<ItemRequestResponseDto> findAll(int from, int size, long userId);
 
-    Collection<ItemRequestResponseDto> findAll();
-
     ItemRequestResponseDto findById(long requestId, long userId);
 }

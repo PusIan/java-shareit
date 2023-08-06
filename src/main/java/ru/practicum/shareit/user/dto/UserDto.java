@@ -1,8 +1,6 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.shareit.utils.Create;
 import ru.practicum.shareit.utils.Update;
 
@@ -12,6 +10,9 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class UserDto {
     private Long id;
     private String name;

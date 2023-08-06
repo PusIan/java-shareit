@@ -1,9 +1,6 @@
 package ru.practicum.shareit.request.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -11,6 +8,8 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class ItemRequestDto {
     @NotEmpty
     private String description;
