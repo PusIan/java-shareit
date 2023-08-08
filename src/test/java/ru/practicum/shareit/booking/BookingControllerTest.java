@@ -148,7 +148,7 @@ public class BookingControllerTest {
 
     @Test
     public void bookingService_GetAllByBookerId() throws Exception {
-        when(bookingService.getAllByBookerId(any(), anyLong(), any(), any()))
+        when(bookingService.getAllByBookerId(any(), anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(bookingDtoResponse, bookingDtoResponse));
 
         mvc.perform(get("/bookings?state=All", 1L)
@@ -164,7 +164,7 @@ public class BookingControllerTest {
 
     @Test
     public void bookingService_GetAllByBookerId_BadRequest() throws Exception {
-        when(bookingService.getAllByBookerId(any(), anyLong(), any(), any()))
+        when(bookingService.getAllByBookerId(any(), anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(bookingDtoResponse, bookingDtoResponse));
 
         mvc.perform(get("/bookings?state=UNKNOWN-STATE", 1L)
@@ -179,7 +179,7 @@ public class BookingControllerTest {
 
     @Test
     public void bookingService_GetAllByItemOwnerId() throws Exception {
-        when(bookingService.getAllByItemOwnerId(any(), anyLong(), any(), any()))
+        when(bookingService.getAllByItemOwnerId(any(), anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(bookingDtoResponse, bookingDtoResponse));
 
         mvc.perform(get("/bookings/owner?state=All", 1L)

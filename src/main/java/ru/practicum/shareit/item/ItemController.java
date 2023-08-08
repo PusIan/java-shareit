@@ -28,8 +28,8 @@ public class ItemController {
 
     @GetMapping
     public Collection<ItemDtoWithBookingDto> findByUserId(@RequestHeader(Constants.HEADER_USER_ID) long userId,
-                                                          @RequestParam(required = false) @Min(0) Integer from,
-                                                          @RequestParam(required = false) @Min(1) Integer size) {
+                                                          @RequestParam(defaultValue = Constants.PAGE_FROM_DEFAULT) @Min(0) int from,
+                                                          @RequestParam(defaultValue = Constants.PAGE_SIZE_DEFAULT) @Min(1) int size) {
         return itemService.findByUserId(userId, from, size);
     }
 
@@ -54,8 +54,8 @@ public class ItemController {
     @GetMapping("/search")
     public Collection<ItemDto> search(@RequestParam String text,
                                       @RequestHeader(Constants.HEADER_USER_ID) long userId,
-                                      @RequestParam(required = false) @Min(0) Integer from,
-                                      @RequestParam(required = false) @Min(1) Integer size) {
+                                      @RequestParam(defaultValue = Constants.PAGE_FROM_DEFAULT) @Min(0) int from,
+                                      @RequestParam(defaultValue = Constants.PAGE_SIZE_DEFAULT) @Min(1) int size) {
         return itemService.search(text, userId, from, size);
     }
 

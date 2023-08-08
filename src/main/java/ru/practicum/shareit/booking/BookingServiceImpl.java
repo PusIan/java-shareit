@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.utils.Utilities;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -78,27 +78,21 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDtoResponse> getAllByBookerId(BookingStatusFilter state, long userId, Integer from, Integer size) {
+    public Collection<BookingDtoResponse> getAllByBookerId(BookingStatusFilter state, long userId, int from, int size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
-        Sort sort = Sort.by("start").descending();
-        Pageable pageable = from != null && size != null ?
-                PageRequest.of(from / size, size, sort) :
-                PageRequest.of(0, Integer.MAX_VALUE, sort);
+        Pageable pageable = Utilities.getPageable(from, size, Sort.by("start").descending());
         Collection<Booking> bookings = bookingStateFetchBookerStrategyFactory.findStrategy(state).fetch(user, pageable);
         return bookings.stream().map(bookingMapper::toBookingDtoResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<BookingDtoResponse> getAllByItemOwnerId(BookingStatusFilter state, long userId, Integer from, Integer size) {
+    public Collection<BookingDtoResponse> getAllByItemOwnerId(BookingStatusFilter state, long userId, int from, int size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
         Collection<Booking> bookings;
-        Sort sort = Sort.by("start").descending();
-        Pageable pageable = from != null && size != null ?
-                PageRequest.of(from / size, size, sort) :
-                PageRequest.of(0, Integer.MAX_VALUE, sort);
+        Pageable pageable = Utilities.getPageable(from, size, Sort.by("start").descending());
         switch (state) {
             case CURRENT:
                 bookings = bookingRepository.findBookingsByItem_OwnerAndStartBeforeAndEndAfter(

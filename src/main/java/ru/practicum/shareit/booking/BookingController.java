@@ -40,16 +40,16 @@ public class BookingController {
     @GetMapping
     public Collection<BookingDtoResponse> getAllByBookerId(@RequestParam(defaultValue = "ALL") BookingStatusFilter state,
                                                            @RequestHeader(Constants.HEADER_USER_ID) long userId,
-                                                           @RequestParam(required = false) @Min(0) Integer from,
-                                                           @RequestParam(required = false) @Min(1) Integer size) {
+                                                           @RequestParam(defaultValue = Constants.PAGE_FROM_DEFAULT) @Min(0) int from,
+                                                           @RequestParam(defaultValue = Constants.PAGE_SIZE_DEFAULT) @Min(1) int size) {
         return bookingService.getAllByBookerId(state, userId, from, size);
     }
 
     @GetMapping("/owner")
     public Collection<BookingDtoResponse> getAllByItemOwnerId(@RequestParam(defaultValue = "ALL") BookingStatusFilter state,
                                                               @RequestHeader(Constants.HEADER_USER_ID) long userId,
-                                                              @RequestParam(required = false) @Min(0) Integer from,
-                                                              @RequestParam(required = false) @Min(1) Integer size) {
+                                                              @RequestParam(defaultValue = Constants.PAGE_FROM_DEFAULT) @Min(0) int from,
+                                                              @RequestParam(defaultValue = Constants.PAGE_SIZE_DEFAULT) @Min(1) int size) {
         return bookingService.getAllByItemOwnerId(state, userId, from, size);
     }
 }

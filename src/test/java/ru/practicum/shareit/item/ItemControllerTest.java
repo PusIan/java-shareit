@@ -21,8 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -61,7 +60,7 @@ public class ItemControllerTest {
 
     @Test
     void itemController_FindByUserId() throws Exception {
-        when(itemService.findByUserId(anyLong(), any(), any()))
+        when(itemService.findByUserId(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(itemResponseDto, itemResponseDto2));
 
         mvc.perform(get("/items/", itemDto.getId().toString())
@@ -125,7 +124,7 @@ public class ItemControllerTest {
 
     @Test
     void itemController_Search() throws Exception {
-        when(itemService.search(any(), anyLong(), any(), any()))
+        when(itemService.search(any(), anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(itemDto, itemDto2));
 
         mvc.perform(get("/items/search?text=ALL")

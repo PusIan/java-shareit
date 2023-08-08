@@ -18,9 +18,9 @@ public interface ItemService {
 
     void delete(long itemId);
 
-    Collection<ItemDto> search(String text, long userId, Integer from, Integer size);
+    Collection<ItemDto> search(String text, long userId, int from, int size);
 
     CommentResponseDto addComment(CommentDto commentDto, long itemId, long userId);
 
-    Collection<ItemDtoWithBookingDto> findByUserId(long userId, Integer from, Integer size);
+    Collection<ItemDtoWithBookingDto> findByUserId(long userId, int from, int size);
 }

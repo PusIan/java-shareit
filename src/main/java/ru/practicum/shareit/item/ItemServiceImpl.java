@@ -2,8 +2,8 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
@@ -20,6 +20,7 @@ import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.utils.Utilities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,12 +61,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDtoWithBookingDto> findByUserId(long userId, Integer from, Integer size) {
+    public Collection<ItemDtoWithBookingDto> findByUserId(long userId, int from, int size) {
         Collection<ItemDtoWithBookingDto> itemDtoWithBookingDtos = new ArrayList<>();
         Collection<Item> items;
-        Pageable pageable = from != null && size != null ?
-                PageRequest.of(from / size, size) :
-                Pageable.unpaged();
+        Pageable pageable = Utilities.getPageable(from, size, Sort.unsorted());
         items = itemRepository.findItemsByOwnerId(userId, pageable);
         for (Item item : items) {
             BookingInItemDtoResponse lastBooking = bookingRepository.findLastBooking(item.getId())
@@ -117,11 +116,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> search(String text, long userId, Integer from, Integer size) {
+    public Collection<ItemDto> search(String text, long userId, int from, int size) {
         if (text.isEmpty()) return Collections.emptyList();
-        Pageable pageable = from != null && size != null ?
-                PageRequest.of(from / size, size) :
-                Pageable.unpaged();
+        Pageable pageable = Utilities.getPageable(from, size, Sort.unsorted());
         return itemRepository.findItemsByName(text, pageable)
                 .stream().map(itemMapper::toItemDto)
                 .collect(Collectors.toList());
