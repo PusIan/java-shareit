@@ -17,13 +17,6 @@ public class BookingMapperImpl implements BookingMapper {
     private final UserMapper userMapper;
 
     @Override
-    public BookingDtoRequest toBookingDtoRequest(Booking booking) {
-        return new BookingDtoRequest(booking.getItem().getId(),
-                booking.getStart(),
-                booking.getEnd());
-    }
-
-    @Override
     public Booking toBooking(BookingDtoRequest bookingDtoRequest, Item item, User user) {
         Booking booking = new Booking();
         booking.setItem(item);

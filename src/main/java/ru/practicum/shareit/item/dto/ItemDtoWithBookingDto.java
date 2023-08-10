@@ -1,9 +1,6 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.shareit.booking.dto.BookingInItemDtoResponse;
 import ru.practicum.shareit.utils.Create;
 
@@ -15,6 +12,8 @@ import java.util.Collection;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class ItemDtoWithBookingDto {
     private Long id;
     @NotEmpty(message = "name can not be empty", groups = {Create.class})
@@ -26,4 +25,5 @@ public class ItemDtoWithBookingDto {
     private BookingInItemDtoResponse lastBooking;
     private BookingInItemDtoResponse nextBooking;
     private Collection<CommentResponseDto> comments;
+    private Long requestId;
 }

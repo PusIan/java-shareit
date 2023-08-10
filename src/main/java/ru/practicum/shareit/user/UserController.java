@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.utils.Create;
 import ru.practicum.shareit.utils.Update;
 
@@ -17,7 +16,6 @@ import java.util.Collection;
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper;
 
     @GetMapping("/{userId}")
     public UserDto getById(@PathVariable long userId) {

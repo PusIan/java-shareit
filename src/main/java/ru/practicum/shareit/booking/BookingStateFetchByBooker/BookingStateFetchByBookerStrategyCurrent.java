@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.BookingStateFetchByBooker;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
@@ -22,8 +23,8 @@ public class BookingStateFetchByBookerStrategyCurrent implements BookingStateFet
     }
 
     @Override
-    public Collection<Booking> fetch(User user) {
-        return bookingRepository.findBookingsByBookerAndStartBeforeAndEndAfterOrderByStartDesc(
-                user, LocalDateTime.now(), LocalDateTime.now());
+    public Collection<Booking> fetch(User user, Pageable pageable) {
+        return bookingRepository.findBookingsByBookerAndStartBeforeAndEndAfter(
+                user, LocalDateTime.now(), LocalDateTime.now(), pageable);
     }
 }

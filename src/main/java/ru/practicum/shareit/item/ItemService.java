@@ -12,15 +12,15 @@ import java.util.Collection;
 public interface ItemService {
     ItemDtoWithBookingDto getById(long itemId, long userId);
 
-    Collection<ItemDtoWithBookingDto> findByUserId(long userId);
-
     ItemDto create(ItemDto itemDto, long userId);
 
     ItemDto update(ItemDto itemDto, long userId);
 
     void delete(long itemId);
 
-    Collection<ItemDto> search(String text, long userId);
+    Collection<ItemDto> search(String text, long userId, int from, int size);
 
     CommentResponseDto addComment(CommentDto commentDto, long itemId, long userId);
+
+    Collection<ItemDtoWithBookingDto> findByUserId(long userId, int from, int size);
 }
