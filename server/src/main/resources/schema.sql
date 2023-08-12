@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS bookings
 CREATE TABLE IF NOT EXISTS comments
 (
     id      BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    text    VARCHAR2(255),
+    text    VARCHAR(255),
     item_id BIGINT references items (id),
     user_id BIGINT references users (id),
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL

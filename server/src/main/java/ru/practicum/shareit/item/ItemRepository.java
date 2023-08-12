@@ -13,6 +13,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("select i from Item as i" +
             " where (lower(i.description) like lower(concat('%', :text, '%')) " +
             " or lower(i.name) like lower(concat('%', :text, '%')))" +
-            " and i.available = true")
+            " and i.available = true" +
+            " order by i.id")
     List<Item> findItemsByName(String text, Pageable pageable);
 }

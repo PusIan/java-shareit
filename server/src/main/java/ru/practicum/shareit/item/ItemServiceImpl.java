@@ -64,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
     public Collection<ItemDtoWithBookingDto> findByUserId(long userId, int from, int size) {
         Collection<ItemDtoWithBookingDto> itemDtoWithBookingDtos = new ArrayList<>();
         Collection<Item> items;
-        Pageable pageable = Utilities.getPageable(from, size, Sort.unsorted());
+        Pageable pageable = Utilities.getPageable(from, size, Sort.by("id").ascending());
         items = itemRepository.findItemsByOwnerId(userId, pageable);
         for (Item item : items) {
             BookingInItemDtoResponse lastBooking = bookingRepository.findLastBooking(item.getId())
