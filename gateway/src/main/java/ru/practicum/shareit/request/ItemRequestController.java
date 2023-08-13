@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.utils.Constants;
 
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 @RestController
 @RequestMapping(path = "/requests")
@@ -29,8 +30,8 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> findAll(@RequestParam(required = false) @Min(0) Integer from,
-                                          @RequestParam(required = false) @Min(1) Integer size,
+    public ResponseEntity<Object> findAll(@PositiveOrZero @RequestParam(required = false) Integer from,
+                                          @Positive @RequestParam(required = false) Integer size,
                                           @RequestHeader(Constants.HEADER_USER_ID) long userId) {
         return itemRequestClient.findAll(from, size, userId);
     }

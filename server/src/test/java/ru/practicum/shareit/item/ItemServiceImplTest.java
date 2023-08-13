@@ -8,8 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.Fixtures;
 import ru.practicum.shareit.booking.BookingService;
-import ru.practicum.shareit.booking.dto.BookingDtoRequest;
-import ru.practicum.shareit.booking.dto.BookingDtoResponse;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.PermissionViolationException;
@@ -109,12 +109,12 @@ public class ItemServiceImplTest {
     @Test
     public void itemServiceImpl_AddCommentWithNoBooking_Ok() {
         ItemDto savedItemDto = itemService.create(itemDto, userDto.getId());
-        BookingDtoRequest bookingDtoRequest = Fixtures.getBooking(savedItemDto.getId());
-        bookingDtoRequest.setStart(LocalDateTime.now().minusDays(5));
-        bookingDtoRequest.setEnd(LocalDateTime.now().minusDays(4));
-        BookingDtoResponse bookingDtoResponse =
-                bookingService.create(bookingDtoRequest, userDto2.getId());
-        bookingService.approve(bookingDtoResponse.getId(), true, userDto.getId());
+        BookingRequestDto bookingRequestDto = Fixtures.getBooking(savedItemDto.getId());
+        bookingRequestDto.setStart(LocalDateTime.now().minusDays(5));
+        bookingRequestDto.setEnd(LocalDateTime.now().minusDays(4));
+        BookingResponseDto bookingResponseDto =
+                bookingService.create(bookingRequestDto, userDto2.getId());
+        bookingService.approve(bookingResponseDto.getId(), true, userDto.getId());
         assertDoesNotThrow(() -> itemService.addComment(commentDto, savedItemDto.getId(), userDto2.getId()));
     }
 }

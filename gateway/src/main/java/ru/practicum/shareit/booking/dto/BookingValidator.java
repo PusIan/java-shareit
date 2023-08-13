@@ -4,15 +4,15 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDateTime;
 
-public class BookingValidator implements ConstraintValidator<BookingValid, BookItemRequestDto> {
+public class BookingValidator implements ConstraintValidator<BookingValid, BookingRequestDto> {
     @Override
-    public boolean isValid(BookItemRequestDto bookItemRequestDto, ConstraintValidatorContext context) {
-        if (bookItemRequestDto.getStart() != null
-                && bookItemRequestDto.getEnd() != null
-                && (bookItemRequestDto.getStart().isBefore(LocalDateTime.now())
-                || bookItemRequestDto.getEnd().isBefore(LocalDateTime.now())
-                || bookItemRequestDto.getStart().isAfter(bookItemRequestDto.getEnd())
-                || bookItemRequestDto.getStart().isEqual(bookItemRequestDto.getEnd()))
+    public boolean isValid(BookingRequestDto bookingRequestDto, ConstraintValidatorContext context) {
+        if (bookingRequestDto.getStart() != null
+                && bookingRequestDto.getEnd() != null
+                && (bookingRequestDto.getStart().isBefore(LocalDateTime.now())
+                || bookingRequestDto.getEnd().isBefore(LocalDateTime.now())
+                || bookingRequestDto.getStart().isAfter(bookingRequestDto.getEnd())
+                || bookingRequestDto.getStart().isEqual(bookingRequestDto.getEnd()))
         ) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Check end/start date")

@@ -9,8 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.Fixtures;
-import ru.practicum.shareit.booking.dto.BookingDtoRequest;
-import ru.practicum.shareit.booking.dto.BookingDtoResponse;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -35,70 +35,70 @@ public class BookingControllerTest {
     private final ObjectMapper mapper;
     @MockBean
     private final BookingService bookingService;
-    private final BookingDtoRequest bookingDtoRequest = Fixtures.getBooking(1);
-    private final BookingDtoResponse bookingDtoResponse = Fixtures.getBookingResponse(1, 1L);
+    private final BookingRequestDto bookingRequestDto = Fixtures.getBooking(1);
+    private final BookingResponseDto bookingResponseDto = Fixtures.getBookingResponse(1, 1L);
 
     @Test
     public void bookingService_Create() throws Exception {
         when(bookingService.create(any(), anyLong()))
-                .thenReturn(bookingDtoResponse);
+                .thenReturn(bookingResponseDto);
 
         mvc.perform(post("/bookings")
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
+                        .content(mapper.writeValueAsString(bookingRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(Constants.HEADER_USER_ID, 1)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(bookingDtoResponse.getId()), Long.class))
-                .andExpect(jsonPath("$.start", is(bookingDtoResponse.getStart().format(ISO_LOCAL_DATE_TIME))))
-                .andExpect(jsonPath("$.end", is(bookingDtoResponse.getEnd().format(ISO_LOCAL_DATE_TIME))))
-                .andExpect(jsonPath("$.status", is(bookingDtoResponse.getStatus().toString())))
-                .andExpect(jsonPath("$.booker", is(bookingDtoResponse.getBooker()), UserDto.class))
-                .andExpect(jsonPath("$.item", is(bookingDtoResponse.getItem()), ItemDto.class));
+                .andExpect(jsonPath("$.id", is(bookingResponseDto.getId()), Long.class))
+                .andExpect(jsonPath("$.start", is(bookingResponseDto.getStart().format(ISO_LOCAL_DATE_TIME))))
+                .andExpect(jsonPath("$.end", is(bookingResponseDto.getEnd().format(ISO_LOCAL_DATE_TIME))))
+                .andExpect(jsonPath("$.status", is(bookingResponseDto.getStatus().toString())))
+                .andExpect(jsonPath("$.booker", is(bookingResponseDto.getBooker()), UserDto.class))
+                .andExpect(jsonPath("$.item", is(bookingResponseDto.getItem()), ItemDto.class));
     }
 
     @Test
     public void bookingService_Approve() throws Exception {
         when(bookingService.approve(anyLong(), anyBoolean(), anyLong()))
-                .thenReturn(bookingDtoResponse);
+                .thenReturn(bookingResponseDto);
 
         mvc.perform(patch("/bookings/{bookingId}?approved=true", 1L)
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
+                        .content(mapper.writeValueAsString(bookingRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(Constants.HEADER_USER_ID, 1)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(bookingDtoResponse.getId()), Long.class))
-                .andExpect(jsonPath("$.start", is(bookingDtoResponse.getStart().format(ISO_LOCAL_DATE_TIME))))
-                .andExpect(jsonPath("$.end", is(bookingDtoResponse.getEnd().format(ISO_LOCAL_DATE_TIME))))
-                .andExpect(jsonPath("$.status", is(bookingDtoResponse.getStatus().toString())))
-                .andExpect(jsonPath("$.booker", is(bookingDtoResponse.getBooker()), UserDto.class))
-                .andExpect(jsonPath("$.item", is(bookingDtoResponse.getItem()), ItemDto.class));
+                .andExpect(jsonPath("$.id", is(bookingResponseDto.getId()), Long.class))
+                .andExpect(jsonPath("$.start", is(bookingResponseDto.getStart().format(ISO_LOCAL_DATE_TIME))))
+                .andExpect(jsonPath("$.end", is(bookingResponseDto.getEnd().format(ISO_LOCAL_DATE_TIME))))
+                .andExpect(jsonPath("$.status", is(bookingResponseDto.getStatus().toString())))
+                .andExpect(jsonPath("$.booker", is(bookingResponseDto.getBooker()), UserDto.class))
+                .andExpect(jsonPath("$.item", is(bookingResponseDto.getItem()), ItemDto.class));
     }
 
     @Test
     public void bookingService_GetById() throws Exception {
         when(bookingService.getById(anyLong(), anyLong()))
-                .thenReturn(bookingDtoResponse);
+                .thenReturn(bookingResponseDto);
 
         mvc.perform(get("/bookings/{bookingId}", 1L)
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
+                        .content(mapper.writeValueAsString(bookingRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(Constants.HEADER_USER_ID, 1)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(bookingDtoResponse.getId()), Long.class))
-                .andExpect(jsonPath("$.start", is(bookingDtoResponse.getStart().format(ISO_LOCAL_DATE_TIME))))
-                .andExpect(jsonPath("$.end", is(bookingDtoResponse.getEnd().format(ISO_LOCAL_DATE_TIME))))
-                .andExpect(jsonPath("$.status", is(bookingDtoResponse.getStatus().toString())))
-                .andExpect(jsonPath("$.booker", is(bookingDtoResponse.getBooker()), UserDto.class))
-                .andExpect(jsonPath("$.item", is(bookingDtoResponse.getItem()), ItemDto.class));
+                .andExpect(jsonPath("$.id", is(bookingResponseDto.getId()), Long.class))
+                .andExpect(jsonPath("$.start", is(bookingResponseDto.getStart().format(ISO_LOCAL_DATE_TIME))))
+                .andExpect(jsonPath("$.end", is(bookingResponseDto.getEnd().format(ISO_LOCAL_DATE_TIME))))
+                .andExpect(jsonPath("$.status", is(bookingResponseDto.getStatus().toString())))
+                .andExpect(jsonPath("$.booker", is(bookingResponseDto.getBooker()), UserDto.class))
+                .andExpect(jsonPath("$.item", is(bookingResponseDto.getItem()), ItemDto.class));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class BookingControllerTest {
                 .thenThrow(NotFoundException.class);
 
         mvc.perform(get("/bookings/{bookingId}", 1L)
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
+                        .content(mapper.writeValueAsString(bookingRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -122,7 +122,7 @@ public class BookingControllerTest {
                 .thenThrow(BadRequestException.class);
 
         mvc.perform(get("/bookings/{bookingId}", 1L)
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
+                        .content(mapper.writeValueAsString(bookingRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -137,7 +137,7 @@ public class BookingControllerTest {
                 .thenThrow(BadRequestException.class);
 
         mvc.perform(get("/bookings/{bookingId}", "NOT_ID")
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
+                        .content(mapper.writeValueAsString(bookingRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -149,10 +149,10 @@ public class BookingControllerTest {
     @Test
     public void bookingService_GetAllByBookerId() throws Exception {
         when(bookingService.getAllByBookerId(any(), anyLong(), anyInt(), anyInt()))
-                .thenReturn(List.of(bookingDtoResponse, bookingDtoResponse));
+                .thenReturn(List.of(bookingResponseDto, bookingResponseDto));
 
         mvc.perform(get("/bookings?state=All", 1L)
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
+                        .content(mapper.writeValueAsString(bookingRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -165,10 +165,10 @@ public class BookingControllerTest {
     @Test
     public void bookingService_GetAllByBookerId_BadRequest() throws Exception {
         when(bookingService.getAllByBookerId(any(), anyLong(), anyInt(), anyInt()))
-                .thenReturn(List.of(bookingDtoResponse, bookingDtoResponse));
+                .thenReturn(List.of(bookingResponseDto, bookingResponseDto));
 
         mvc.perform(get("/bookings?state=UNKNOWN-STATE", 1L)
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
+                        .content(mapper.writeValueAsString(bookingRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -180,10 +180,10 @@ public class BookingControllerTest {
     @Test
     public void bookingService_GetAllByItemOwnerId() throws Exception {
         when(bookingService.getAllByItemOwnerId(any(), anyLong(), anyInt(), anyInt()))
-                .thenReturn(List.of(bookingDtoResponse, bookingDtoResponse));
+                .thenReturn(List.of(bookingResponseDto, bookingResponseDto));
 
         mvc.perform(get("/bookings/owner?state=All", 1L)
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
+                        .content(mapper.writeValueAsString(bookingRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)

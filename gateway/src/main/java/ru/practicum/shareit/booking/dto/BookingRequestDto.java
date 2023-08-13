@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @BookingValid
 @EqualsAndHashCode
 @ToString
-public class BookingDtoRequest {
-    private Long itemId;
+public class BookingRequestDto {
+    private long itemId;
     @NotNull
     private LocalDateTime start;
     @NotNull

@@ -1,8 +1,8 @@
 package ru.practicum.shareit;
 
 import ru.practicum.shareit.booking.BookingStatus;
-import ru.practicum.shareit.booking.dto.BookingDtoRequest;
-import ru.practicum.shareit.booking.dto.BookingDtoResponse;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -87,23 +87,23 @@ public class Fixtures {
         return commentResponseDto;
     }
 
-    public static BookingDtoRequest getBooking(long itemId) {
-        BookingDtoRequest bookingDtoRequest = new BookingDtoRequest();
-        bookingDtoRequest.setItemId(itemId);
-        bookingDtoRequest.setStart(LocalDateTime.now().plusDays(1));
-        bookingDtoRequest.setEnd(LocalDateTime.now().plusDays(2));
-        return bookingDtoRequest;
+    public static BookingRequestDto getBooking(long itemId) {
+        BookingRequestDto bookingRequestDto = new BookingRequestDto();
+        bookingRequestDto.setItemId(itemId);
+        bookingRequestDto.setStart(LocalDateTime.now().plusDays(1));
+        bookingRequestDto.setEnd(LocalDateTime.now().plusDays(2));
+        return bookingRequestDto;
     }
 
-    public static BookingDtoResponse getBookingResponse(long id, long itemId) {
-        BookingDtoResponse bookingDtoResponse = new BookingDtoResponse();
-        bookingDtoResponse.setId(id);
-        bookingDtoResponse.setItem(getItem1());
-        bookingDtoResponse.setStatus(BookingStatus.WAITING);
-        bookingDtoResponse.setBooker(getUser1());
-        bookingDtoResponse.setStart(getBooking(itemId).getStart());
-        bookingDtoResponse.setEnd(getBooking(itemId).getEnd());
-        return bookingDtoResponse;
+    public static BookingResponseDto getBookingResponse(long id, long itemId) {
+        BookingResponseDto bookingResponseDto = new BookingResponseDto();
+        bookingResponseDto.setId(id);
+        bookingResponseDto.setItem(getItem1());
+        bookingResponseDto.setStatus(BookingStatus.WAITING);
+        bookingResponseDto.setBooker(getUser1());
+        bookingResponseDto.setStart(getBooking(itemId).getStart());
+        bookingResponseDto.setEnd(getBooking(itemId).getEnd());
+        return bookingResponseDto;
     }
 
     public static ItemRequestDto getItemRequestDto() {

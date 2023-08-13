@@ -10,7 +10,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.utils.Constants;
 import ru.practicum.shareit.utils.Create;
 
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 @RestController
 @RequestMapping("/items")
@@ -26,8 +27,8 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<Object> findByUserId(@RequestHeader(Constants.HEADER_USER_ID) long userId,
-                                               @RequestParam(defaultValue = Constants.PAGE_FROM_DEFAULT) @Min(0) int from,
-                                               @RequestParam(defaultValue = Constants.PAGE_SIZE_DEFAULT) @Min(1) int size) {
+                                               @PositiveOrZero @RequestParam(defaultValue = Constants.PAGE_FROM_DEFAULT) int from,
+                                               @Positive @RequestParam(defaultValue = Constants.PAGE_SIZE_DEFAULT) int size) {
         return itemClient.findByUserId(userId, from, size);
     }
 
@@ -51,8 +52,8 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestParam String text,
                                          @RequestHeader(Constants.HEADER_USER_ID) long userId,
-                                         @RequestParam(defaultValue = Constants.PAGE_FROM_DEFAULT) @Min(0) int from,
-                                         @RequestParam(defaultValue = Constants.PAGE_SIZE_DEFAULT) @Min(1) int size) {
+                                         @PositiveOrZero @RequestParam(defaultValue = Constants.PAGE_FROM_DEFAULT) int from,
+                                         @Positive @RequestParam(defaultValue = Constants.PAGE_SIZE_DEFAULT) int size) {
         return itemClient.search(text, userId, from, size);
     }
 

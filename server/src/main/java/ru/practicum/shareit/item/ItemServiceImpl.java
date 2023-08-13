@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingStatus;
-import ru.practicum.shareit.booking.dto.BookingInItemDtoResponse;
+import ru.practicum.shareit.booking.dto.BookingInItemResponseDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.exceptions.NotFoundException;
@@ -45,8 +45,8 @@ public class ItemServiceImpl implements ItemService {
     public ItemDtoWithBookingDto getById(long itemId, long userId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("item %s not found", itemId)));
-        BookingInItemDtoResponse lastBooking = null;
-        BookingInItemDtoResponse nextBooking = null;
+        BookingInItemResponseDto lastBooking = null;
+        BookingInItemResponseDto nextBooking = null;
         if (item.getOwner().getId() == userId) {
             lastBooking = bookingRepository.findLastBooking(itemId)
                     .map(bookingMapper::toBookingInItemDtoResponse)
@@ -67,10 +67,10 @@ public class ItemServiceImpl implements ItemService {
         Pageable pageable = Utilities.getPageable(from, size, Sort.by("id").ascending());
         items = itemRepository.findItemsByOwnerId(userId, pageable);
         for (Item item : items) {
-            BookingInItemDtoResponse lastBooking = bookingRepository.findLastBooking(item.getId())
+            BookingInItemResponseDto lastBooking = bookingRepository.findLastBooking(item.getId())
                     .map(bookingMapper::toBookingInItemDtoResponse)
                     .orElse(null);
-            BookingInItemDtoResponse nextBooking = bookingRepository.findNextBooking(item.getId())
+            BookingInItemResponseDto nextBooking = bookingRepository.findNextBooking(item.getId())
                     .map(bookingMapper::toBookingInItemDtoResponse)
                     .orElse(null);
             Collection<CommentResponseDto> commentsResponseDto = commentMapper

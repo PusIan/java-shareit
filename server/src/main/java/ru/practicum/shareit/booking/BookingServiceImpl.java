@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingStateFetchByBooker.BookingStateFetchBookerStrategyFactory;
-import ru.practicum.shareit.booking.dto.BookingDtoRequest;
-import ru.practicum.shareit.booking.dto.BookingDtoResponse;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.exceptions.NotFoundException;
@@ -34,23 +34,23 @@ public class BookingServiceImpl implements BookingService {
     private final BookingStateFetchBookerStrategyFactory bookingStateFetchBookerStrategyFactory;
 
     @Override
-    public BookingDtoResponse create(BookingDtoRequest bookingDtoRequest, long userId) {
+    public BookingResponseDto create(BookingRequestDto bookingRequestDto, long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
-        Item item = itemRepository.findById(bookingDtoRequest.getItemId())
-                .orElseThrow(() -> new NotFoundException(String.format("item %s not found", bookingDtoRequest.getItemId())));
+        Item item = itemRepository.findById(bookingRequestDto.getItemId())
+                .orElseThrow(() -> new NotFoundException(String.format("item %s not found", bookingRequestDto.getItemId())));
         if (!item.getAvailable()) {
             throw new BadRequestException(String.format("item %s not available", item.getId()));
         }
         if (item.getOwner().getId() == userId) {
             throw new NotFoundException(String.format("user can not book its own item", item.getId()));
         }
-        Booking booking = bookingMapper.toBooking(bookingDtoRequest, item, user);
+        Booking booking = bookingMapper.toBooking(bookingRequestDto, item, user);
         return bookingMapper.toBookingDtoResponse(bookingRepository.save(booking));
     }
 
     @Override
-    public BookingDtoResponse approve(long bookingId, boolean approved, long userId) {
+    public BookingResponseDto approve(long bookingId, boolean approved, long userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException(String.format("booking %s not found", bookingId)));
         if (booking.getItem().getOwner().getId() != userId) {
@@ -64,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDtoResponse getById(long bookingId, long userId) {
+    public BookingResponseDto getById(long bookingId, long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
         Booking booking = bookingRepository.findById(bookingId)
@@ -78,7 +78,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDtoResponse> getAllByBookerId(BookingStatusFilter state, long userId, int from, int size) {
+    public Collection<BookingResponseDto> getAllByBookerId(BookingStatusFilter state, long userId, int from, int size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
         Pageable pageable = Utilities.getPageable(from, size, Sort.by("start").descending());
@@ -88,7 +88,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDtoResponse> getAllByItemOwnerId(BookingStatusFilter state, long userId, int from, int size) {
+    public Collection<BookingResponseDto> getAllByItemOwnerId(BookingStatusFilter state, long userId, int from, int size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("user %s not found", userId)));
         Collection<Booking> bookings;

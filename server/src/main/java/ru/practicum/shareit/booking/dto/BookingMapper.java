@@ -5,9 +5,9 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 
 public interface BookingMapper {
-    Booking toBooking(BookingDtoRequest bookingDtoRequest, Item item, User user);
+    Booking toBooking(BookingRequestDto bookingRequestDto, Item item, User user);
 
-    BookingDtoResponse toBookingDtoResponse(Booking booking);
+    BookingResponseDto toBookingDtoResponse(Booking booking);
 
-    BookingInItemDtoResponse toBookingInItemDtoResponse(Booking booking);
+    BookingInItemResponseDto toBookingInItemDtoResponse(Booking booking);
 }
